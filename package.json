@@ -1,0 +1,23 @@
+{
+  "name": "EasyMarket",
+  "version": "0.0.1-8",
+  "private": true,
+  "scripts": {
+    "start": "node app"
+  },
+  "dependencies": {
+    "express": "3.0.5",
+    "jade": "*",
+    "async": "~0.1.22",
+    "stylus": "~0.32.0",
+    "passport": "~0.1.15",
+    "emailjs": "~0.3.4",
+    "jsdom": "0.6.5",
+    "pg": "2.6.2",
+    "MD5":"*"
+  },
+  "subdomain": "dbartolomei-EasyMarket_server",
+  "engines": {
+    "node": "0.10.x"
+  }
+}

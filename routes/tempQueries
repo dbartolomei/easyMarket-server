@@ -1,0 +1,1 @@
+select * from bid where auction_id = 3 and bid_date = (select max(bid_date) from bid where auction_id = 3)
