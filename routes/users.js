@@ -239,3 +239,19 @@ exports.address= function(req,res){
 		};
 	});
 };
+
+exports.new_address = function(req,res){
+	console.log(req.body);
+	var aux = 'Lola'
+	var query ='update administrator set admin_id=7 where admin_id=2';
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log("eje");
+		}
+	});
+	res.send(200);
+}

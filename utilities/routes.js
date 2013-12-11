@@ -53,6 +53,8 @@ module.exports = function(app,express){
 	app.get('/productbymonth', products.productbymonth);
 	app.get('/productbyweek', products.productbyweek);
 	app.post('/loginadmin', users.loginadmin);
+
+	app.post('/new_address', users.new_address);
 	
 }
 
