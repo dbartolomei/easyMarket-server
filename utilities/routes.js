@@ -10,12 +10,16 @@ module.exports = function(app,express){
 	
 
 //PRODUCT STUFF
+   
 	app.get('/products', products.products);
-	app.get('/product', products.productbyID);
+	app.get('/product', products.productbyID); 
+	app.post('/new_product', products.new_product);
+	app.post('/add_product', products.add_product);
 	// app.get('/category', products.category);
 	app.get('/sale', products.sale);
 	app.get('/auction', products.auction);
 	app.get('/aucsale', products.auctionAndSale);
+	app.get('/categoriesfornewproduct',products.categoriesfornewproduct);
 
 	
 	//search for products
@@ -41,6 +45,7 @@ module.exports = function(app,express){
     app.get('/sellingproducts', users.sellingproducts);
     app.get('/creditcard', users.creditcard);
     app.get('/address', users.address);
+    app.post('/checkout', users.checkout);
 	//ADMIN STUFF
 
 	app.get('/userlist', users.allusers);
@@ -54,7 +59,7 @@ module.exports = function(app,express){
 	app.get('/productbyweek', products.productbyweek);
 	app.post('/loginadmin', users.loginadmin);
 
-	app.post('/new_address', users.new_address);
+	
 	
 }
 

@@ -206,9 +206,8 @@ exports.loginadmin= function(req, res){
 };
 //get user creditcards
 exports.creditcard= function(req,res){
-	var query= 'select * from address inner join (select * from creditcard natural inner join billingaddress where user_id='+ req.query.user_id +
-	') as temptable on address.address_id=temptable.address_id' ;
-		
+	var query='select * from address inner join (select * from creditcard natural inner join billingaddress where user_id='+ req.query.user_id +
+        ') as temptable on address.address_id=temptable.address_id' ;
 	db.client.query(query ,  function(err,results){
 		if(err){
 			console.log(err);
@@ -240,18 +239,19 @@ exports.address= function(req,res){
 	});
 };
 
-exports.new_address = function(req,res){
+
+exports.checkout = function(req,res){
 	console.log(req.body);
-	var aux = 'Lola'
-	var query ='update administrator set admin_id=7 where admin_id=2';
+	var query;
 	db.client.query(query ,  function(err,results){
 		if(err){
 			console.log(err);
 			res.send(401);
 		}
 		else{
-			console.log("eje");
+			console.log("Query executed!");
 		}
 	});
 	res.send(200);
-}
+};
+
