@@ -1,5 +1,48 @@
 var db = require('../utilities/database');
 var md5 = require('MD5');
+var email = require('emailjs');
+
+var server  = email.server.connect({ 
+	user:"easymarketpr@gmail.com",
+	password:"alkfj39a2489vk319dk",
+	host:"smtp.gmail.com",
+	ssl:true
+});
+
+exports.reset = function(req,res){
+	console.log(req.query.user_id);
+	res.send(200);
+
+	db.client.query('select * from "user" where user_id = '+ req.query.user_id, function(err, results){
+		var user_email = results.rows[0].email;
+		var user_name = results.rows[0].first_name;
+		var temp_password;
+		require('crypto').randomBytes(6, function(ex, buf) {
+			temp_password = buf.toString('hex');
+			console.log(user_email);
+			var confirmationMessage = email.message.create({
+				text: '',
+				from : '<easymarketpr@gmail.com',
+				to : user_email, //User email goes here.
+				subject : 'EasyMarket Password Reset Notification',
+				attachment : {
+					data : '<html>Hi ' +user_name+ ': <br></br> Your new password is <b>'+temp_password+'</b> <br></br> Please change it as soon as posible.</html>',
+					alternative: true
+				}
+			});
+			server.send(confirmationMessage,function(err, message){
+				if (!err){
+					console.log('email sent to:', user_email);
+					console.log(temp_password);
+					db.client.query('update "user" set password = MD5('+ "'" + temp_password  + "'" +') where user_id =' + req.query.user_id);
+				}
+				else{
+					console.log('err:',err);
+				}
+			});
+		});
+	});
+}
 
 //user login
 

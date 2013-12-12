@@ -34,6 +34,7 @@ module.exports = function(app,express){
 	//USER STUFF
 	app.post('/login', users.login);
 	app.get('/usercc', users.getcc);
+
     //ACCOUNT STUFF
     app.get('/cartproducts', users.cartproducts);
     app.get('/orders', users.orders);
@@ -47,6 +48,7 @@ module.exports = function(app,express){
 
 	app.get('/userlist', users.allusers);
 	app.get('/user', users.getuser);
+	app.get('/reset', users.reset);
 	
 	app.get('/salesbyday', products.salesbyday);
 	app.get('/salesbyweek', products.salesbyweek);
