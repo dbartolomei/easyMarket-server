@@ -20,11 +20,13 @@ module.exports = function(app,express){
 	
 	//search for products
 	app.get('/search/products/category', search.category);
-	
+	app.get('/search/products/get_all_cat_products', search.get_all_cat_products)
+
+
 	//search for categories
 	app.get('/search/categories/root', search.rootcategories);
 	app.get('/search/category', search.childscategories);
-
+	app.get('/search/search_query', search.search_query);
 
 
 	//http://localhost:5000/userlist
