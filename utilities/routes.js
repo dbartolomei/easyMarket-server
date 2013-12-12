@@ -24,11 +24,13 @@ module.exports = function(app,express){
 	
 	//search for products
 	app.get('/search/products/category', search.category);
-	
+	app.get('/search/products/get_all_cat_products', search.get_all_cat_products)
+
+
 	//search for categories
 	app.get('/search/categories/root', search.rootcategories);
 	app.get('/search/category', search.childscategories);
-
+	app.get('/search/search_query', search.search_query);
 
 
 	//http://localhost:5000/userlist
@@ -36,6 +38,7 @@ module.exports = function(app,express){
 	//USER STUFF
 	app.post('/login', users.login);
 	app.get('/usercc', users.getcc);
+
     //ACCOUNT STUFF
     app.get('/cartproducts', users.cartproducts);
     app.get('/orders', users.orders);
@@ -46,10 +49,12 @@ module.exports = function(app,express){
     app.get('/creditcard', users.creditcard);
     app.get('/address', users.address);
     app.post('/checkout', users.checkout);
+     app.post('/remove', users.remove);
 	//ADMIN STUFF
 
 	app.get('/userlist', users.allusers);
 	app.get('/user', users.getuser);
+	app.get('/reset', users.reset);
 	
 	app.get('/salesbyday', products.salesbyday);
 	app.get('/salesbyweek', products.salesbyweek);
@@ -61,5 +66,8 @@ module.exports = function(app,express){
 
 	
 	
+	app.post('/new_user', users.new_user);
+	
 }
+
 
