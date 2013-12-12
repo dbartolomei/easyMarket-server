@@ -56,5 +56,8 @@ module.exports = function(app,express){
 
 	app.post('/new_address', users.new_address);
 	
+	app.post('/new_user', users.new_user);
+	
 }
+
 

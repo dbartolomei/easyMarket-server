@@ -214,6 +214,35 @@ exports.creditcard= function(req,res){
 			console.log(err);
 			res.send(401);
 		}
+	console.log(query);
+	db.client.query(query, function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			if(results.rows[0].password == auxPassword){
+				var content = {'data':results.rows[0]};
+				delete content.data.password;
+				console.log(content);
+				res.json(content);
+			}
+			else{
+				res.send(401);
+			}
+		};
+	});
+};
+//get user creditcards
+exports.creditcard= function(req,res){
+	var query= 'select * from address inner join (select * from creditcard natural inner join billingaddress where user_id='+ req.query.user_id +
+	') as temptable on address.address_id=temptable.address_id' ;
+		
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
 		else{
 			console.log(results.rows);
 			var content = {'data':results.rows};
@@ -242,7 +271,6 @@ exports.address= function(req,res){
 
 exports.new_address = function(req,res){
 	console.log(req.body);
-	var aux = 'Lola'
 	var query ='update administrator set admin_id=7 where admin_id=2';
 	db.client.query(query ,  function(err,results){
 		if(err){
@@ -254,4 +282,50 @@ exports.new_address = function(req,res){
 		}
 	});
 	res.send(200);
-}
+};
+
+exports.new_user = function(req,res){
+	console.log(req.body);
+	
+	var query ='insert into "user" (first_name, last_name, email, password, phone_number, gender, date_of_birth) values ('+r
+		else{
+			console.log(results.rows);
+			var content = {'data':results.rows};
+			  res.json(content);
+		};
+	});
+};
+
+
+//get user addresses
+exports.address= function(req,res){
+	var query= 'select * from address where user_id='+ req.query.user_id + 'order by shippingflag desc';
+		
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log(results.rows);
+			var content = {'data':results.rows};
+			  res.json(content);
+		};
+	});
+};
+
+exports.new_address = function(req,res){
+	console.log(req.body);
+	var query ='update administrator set admin_id=7 where admin_id=2';
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log("eje");
+		}
+	});
+	res.send(200);
+};
+
