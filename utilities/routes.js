@@ -13,6 +13,8 @@ module.exports = function(app,express){
 	app.get('/product', products.productbyID); 
 	app.post('/new_product', products.new_product);
 	app.post('/add_product', products.add_product);
+	app.post('/bid_product', products.bid_product);
+	app.post('/accept_bid', products.accept_bid);
 	// app.get('/category', products.category);
 	app.get('/sale', products.sale);
 	app.get('/auction', products.auction);
@@ -44,15 +46,22 @@ module.exports = function(app,express){
     app.get('/losingbids', users.losingbids);
     app.get('/auctionproducts', users.auctionproducts);
     app.get('/sellingproducts', users.sellingproducts);
-    app.get('/creditcard', users.creditcard);
+    app.get('/creditcard', users.getcc);
     app.get('/address', users.address);
+    app.post('/new_address', users.new_address);
     app.post('/checkout', users.checkout);
-     app.post('/remove', users.remove);
+    app.post('/remove', users.remove);
+    app.post('/new_creditcard',users.new_cc);
 	//ADMIN STUFF
 
 	app.get('/userlist', users.allusers);
 	app.get('/user', users.getuser);
+
 	app.get('/getaddress', users.getaddress);
+
+	app.get('/getaddress', users.getaddress);
+
+
 	app.get('/reset', users.reset);
 	
 	app.get('/salesbyday', products.salesbyday);
@@ -63,11 +72,12 @@ module.exports = function(app,express){
 	app.get('/productbyweek', products.productbyweek);
 	app.post('/loginadmin', users.loginadmin);
 
+	app.get('/getaddress',users.getaddress);
 	
 	
 	app.post('/new_user', users.new_user);
 	app.post('/new_creditcard', users.new_cc);
-	app.post('/new_billaddress', users.new_billaddress);
+	// app.post('/new_billaddress', users.new_billaddress);
 	
 };
 
