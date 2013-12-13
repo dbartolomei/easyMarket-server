@@ -48,8 +48,10 @@ module.exports = function(app,express){
     app.get('/sellingproducts', users.sellingproducts);
     app.get('/creditcard', users.creditcard);
     app.get('/address', users.address);
+    app.post('/new_address', users.new_address);
     app.post('/checkout', users.checkout);
-     app.post('/remove', users.remove);
+    app.post('/remove', users.remove);
+    app.post('/new_creditcard',users.new_cc);
 	//ADMIN STUFF
 
 	app.get('/userlist', users.allusers);
@@ -64,6 +66,7 @@ module.exports = function(app,express){
 	app.get('/productbyweek', products.productbyweek);
 	app.post('/loginadmin', users.loginadmin);
 
+	app.get('/getaddress',users.getaddress);
 	
 	
 	app.post('/new_user', users.new_user);

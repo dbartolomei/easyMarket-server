@@ -251,40 +251,11 @@ exports.loginadmin= function(req, res){
 	});
 }
 //get user creditcards
-// exports.creditcard= function(req,res){
-// 	var query= 'select * from address inner join (select * from creditcard natural inner join billingaddress where user_id='+ req.query.user_id +
-// 	') as temptable on address.address_id=temptable.address_id' ;
-		
-// 	db.client.query(query ,  function(err,results){
-// 		if(err){
-// 			console.log(err);
-// 			res.send(401);
-// 		}
-// 	console.log(query);
-// 	db.client.query(query, function(err,results){
-// 		if(err){
-// 			console.log(err);
-// 			res.send(401);
-// 		}
-// 		else{
-// 			if(results.rows[0].password == auxPassword){
-// 				var content = {'data':results.rows[0]};
-// 				delete content.data.password;
-// 				console.log(content);
-// 				res.json(content);
-// 			}
-// 			else{
-// 				res.send(401);
-// 			}
-// 		}
-// 	})
-// 	}
-// }
-// }
 
-// //get user creditcards
+
+//get user creditcards
 exports.creditcard= function(req,res){
-	var query='select * from address inner join (select * from creditcard natural inner join billingaddress where user_id='+ req.query.user_id +
+	var query='select * from address inner join (select * from creditcard natural inner join address where user_id='+ req.query.user_id +
         ') as temptable on address.address_id=temptable.address_id' ;
 	db.client.query(query ,  function(err,results){
 		if(err){
@@ -318,19 +289,41 @@ exports.address= function(req,res){
 }
 
 exports.new_address = function(req,res){
-	console.log(req.body);
-	var query ='update administrator set admin_id=7 where admin_id=2';
-	db.client.query(query ,  function(err,results){
+	var shippingflag = req.body.shippingflag == 'true';
+	// console.log(req.body);
+	// var query ='update administrator set admin_id=7 where admin_id=2';
+	var query ='insert into address (address_line1, address_line2, zipcode, country, city, user_id, shippingflag) values (' + "'" + req.body.line1 + "','" + req.body.line2 + "','" + req.body.zipcode  + "','" + req.body.country + "','" +  req.body.city + "','" +  req.body.user_id + "','" +  shippingflag + "')";
+	// console.log(req.body);
+	db.client.query(query, function(err,results){
 		if(err){
 			console.log(err);
 			res.send(401);
 		}
 		else{
-			console.log("eje");
+			console.log(results);
 		}
 	});
 	res.send(200);
 }
+
+exports.new_cc = function(req,res){
+	var shippingflag = req.body.shippingflag == 'true';
+	// console.log(req.body);
+	// var query ='update administrator set admin_id=7 where admin_id=2';
+	var query ='insert into creditcard (creditcard_number, cardholder_first_name, cardholder_last_name, company, expiration_date, secret_code, user_id) values (' + "'" + req.body.ccnumber + "','" + req.body.ccownerfname + "','" + req.body.ccownerlname  + "','" + req.body.company + "','" +  req.body.expdate + "','" +  req.body.secretcode + "','" +  req.body.user_id + "')";
+	// console.log(req.body);
+	db.client.query(query, function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log(results);
+		}
+	});
+	res.send(200);
+}
+
 
 exports.new_user = function(req,res){
 	console.log(req.body);
@@ -351,8 +344,8 @@ exports.new_user = function(req,res){
 
 //get user addresses
 exports.address= function(req,res){
-	var query= 'select * from address where user_id='+ req.body.user_id + 'order by shippingflag desc';
-		
+	var query= "select * from address where user_id="+ req.query.user_id + " order by shippingflag desc";
+	console.log(query);
 	db.client.query(query ,  function(err,results){
 		if(err){
 			console.log(err);
@@ -418,5 +411,9 @@ exports.remove= function(req,res){
 	res.send(200);
 
 };
+
+exports.getaddress = function(req,res){
+
+}
 
 
