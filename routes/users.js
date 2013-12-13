@@ -370,18 +370,18 @@ exports.address= function(req,res){
 exports.checkout = function(req,res){
 	console.log(req.body);
 	
-    var query;
+    var query='';
     
     for(var i=0;i<req.body.length;i++){
-    	
-   query=' insert into transaction(transaction_date, creditcard_id ,account_number,sell_id,user_id,quantity,price) values(CURRENT_TIMESTAMP, '+ req.body.creditcard_id+ ',(select account_number from account natural join (select user_id from product natural join sell where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true) ) as temp) ,(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true), '+req.body.length+', 1,(select price from sell where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true)));';
-   query=query+' update putincart set active = false where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true); update sell set stock=stock-1 where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true);';
-    	
-    	
+    	console.log(i);
+  query=query+ ' insert into transaction(transaction_date, creditcard_id ,account_number,sell_id,user_id,quantity,price) values(CURRENT_TIMESTAMP, '+ req.body.creditcard_id+ ',(select account_number from account natural join (select user_id from product natural join sell where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.user_id+') and active is true) ) as temp) , (select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.user_id+') and active is true), '+req.body.user_id+', 1,(select price from sell where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.user_id+') and active is true)));';
+  query=query+ ' update sell set stock=stock-1 where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.user_id+') and active is true);  update putincart set active = false where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.user_id+') and active is true);';
+    
+    
+    
     }
-
-	
-	 query =query + ' update cart set price_total=0.0 where user_id='+req.body.length+';  update sell set available=false where stock<1;';
+  query =query + ' update cart set price_total=0.0 where user_id='+req.body.user_id+';  update sell set available=false where stock=0;';
+	console.log(query);
 	 db.client.query(query ,  function(err,results){
 		if(err){
 			console.log(err);

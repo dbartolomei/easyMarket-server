@@ -15,6 +15,8 @@ module.exports = function(app,express){
 	app.get('/product', products.productbyID); 
 	app.post('/new_product', products.new_product);
 	app.post('/add_product', products.add_product);
+	app.post('/bid_product', products.bid_product);
+	app.post('/accept_bid', products.accept_bid);
 	// app.get('/category', products.category);
 	app.get('/sale', products.sale);
 	app.get('/auction', products.auction);
