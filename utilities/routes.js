@@ -3,9 +3,7 @@ module.exports = function(app,express){
 	var index = require('../routes/index');
 	var products = require('../routes/products');
 	var search = require('../routes/search');
-   
-    
-    
+	
 	app.get('/', index.index);
 	
 
@@ -24,7 +22,7 @@ module.exports = function(app,express){
 	
 	//search for products
 	app.get('/search/products/category', search.category);
-	app.get('/search/products/get_all_cat_products', search.get_all_cat_products)
+	app.get('/search/products/get_all_cat_products', search.get_all_cat_products);
 
 
 	//search for categories
@@ -54,11 +52,8 @@ module.exports = function(app,express){
 
 	app.get('/userlist', users.allusers);
 	app.get('/user', users.getuser);
-<<<<<<< HEAD
 	app.get('/getaddress', users.getaddress);
-=======
 	app.get('/reset', users.reset);
->>>>>>> 25b29fa35446a13a7bbbc7f4e6bf3d2ea56079d9
 	
 	app.get('/salesbyday', products.salesbyday);
 	app.get('/salesbyweek', products.salesbyweek);
@@ -74,6 +69,6 @@ module.exports = function(app,express){
 	app.post('/new_creditcard', users.new_cc);
 	app.post('/new_billaddress', users.new_billaddress);
 	
-}
+};
 
 
