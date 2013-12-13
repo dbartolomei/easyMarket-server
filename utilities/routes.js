@@ -56,7 +56,11 @@ module.exports = function(app,express){
 
 	app.get('/userlist', users.allusers);
 	app.get('/user', users.getuser);
+<<<<<<< HEAD
+	app.get('/getaddress', users.getaddress);
+=======
 	app.get('/reset', users.reset);
+>>>>>>> 25b29fa35446a13a7bbbc7f4e6bf3d2ea56079d9
 	
 	app.get('/salesbyday', products.salesbyday);
 	app.get('/salesbyweek', products.salesbyweek);
@@ -69,6 +73,8 @@ module.exports = function(app,express){
 	
 	
 	app.post('/new_user', users.new_user);
+	app.post('/new_creditcard', users.new_cc);
+	app.post('/new_billaddress', users.new_billaddress);
 	
 }
 
