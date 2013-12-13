@@ -3,6 +3,7 @@ var md5 = require('MD5');
 var email = require('emailjs');
 
 var server  = email.server.connect({ 
+<<<<<<< HEAD
         user:"easymarketpr@gmail.com",
         password:"alkfj39a2489vk319dk",
         host:"smtp.gmail.com",
@@ -43,6 +44,48 @@ exports.reset = function(req,res){
                 });
         });
 };
+=======
+	user:"easymarketpr@gmail.com",
+	password:"alkfj39a2489vk319dk",
+	host:"smtp.gmail.com",
+	ssl:true
+});
+
+exports.reset = function(req,res){
+	console.log(req.query.user_id);
+	res.send(200);
+
+	db.client.query('select * from "user" where user_id = '+ req.query.user_id, function(err, results){
+		var user_email = results.rows[0].email;
+		var user_name = results.rows[0].first_name;
+		var temp_password;
+		require('crypto').randomBytes(6, function(ex, buf) {
+			temp_password = buf.toString('hex');
+			console.log(user_email);
+			var confirmationMessage = email.message.create({
+				text: '',
+				from : '<easymarketpr@gmail.com',
+				to : user_email, //User email goes here.
+				subject : 'EasyMarket Password Reset Notification',
+				attachment : {
+					data : '<html>Hi ' +user_name+ ': <br></br> Your new password is <b>'+temp_password+'</b> <br></br> Please change it as soon as posible.</html>',
+					alternative: true
+				}
+			});
+			server.send(confirmationMessage,function(err, message){
+				if (!err){
+					console.log('email sent to:', user_email);
+					console.log(temp_password);
+					db.client.query('update "user" set password = MD5('+ "'" + temp_password  + "'" +') where user_id =' + req.query.user_id);
+				}
+				else{
+					console.log('err:',err);
+				}
+			});
+		});
+	});
+}
+>>>>>>> 25b29fa35446a13a7bbbc7f4e6bf3d2ea56079d9
 
 //user login
 
@@ -284,6 +327,7 @@ exports.loginadmin= function(req, res){
 
 // //get user creditcards
 exports.creditcard= function(req,res){
+<<<<<<< HEAD
         var query= 'select * from address inner join (select * from creditcard natural inner join billingaddress where user_id='+ req.query.user_id +
         ') as temptable on address.address_id=temptable.address_id' ;
                 
@@ -299,6 +343,22 @@ exports.creditcard= function(req,res){
                 };
         });
 };
+=======
+	var query='select * from address inner join (select * from creditcard natural inner join billingaddress where user_id='+ req.query.user_id +
+        ') as temptable on address.address_id=temptable.address_id' ;
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log(results.rows);
+			var content = {'data':results.rows};
+			  res.json(content);
+		};
+	});
+}
+>>>>>>> 25b29fa35446a13a7bbbc7f4e6bf3d2ea56079d9
 
 
 // //get user addresses
@@ -349,6 +409,7 @@ exports.new_address = function(req,res){
 };
 
 exports.new_user = function(req,res){
+<<<<<<< HEAD
         console.log(req.body);
         var query ='insert into "user" (first_name, last_name, email, password, phone_number, gender, date_of_birth) values (' + "'" + req.body.fname + "','" + req.body.lname + "','" + req.body.email + "',md5('" + req.body.password + "'),'" + req.body.phone + "','" + req.body.gender + "','" + req.body.bday + "')";
         db.client.query(query,function(err,results){
@@ -362,11 +423,27 @@ exports.new_user = function(req,res){
 
         });
         console.log(query);
+=======
+	console.log(req.body);
+	var query ='insert into "user" (first_name, last_name, email, password, phone_number, gender, date_of_birth) values (' + "'" + req.body.fname + "','" + req.body.lname + "','" + req.body.email + "',md5('" + req.body.password + "'),'" + req.body.phone + "','" + req.body.gender + "','" + req.body.bday + "')";
+	db.client.query(query,function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log(results);
+		}
+
+	})
+	console.log(query);
+>>>>>>> 25b29fa35446a13a7bbbc7f4e6bf3d2ea56079d9
 };
 
 
 //get user addresses
 exports.address= function(req,res){
+<<<<<<< HEAD
         var query= 'select * from address where user_id='+ req.body.user_id + 'order by shippingflag desc';
                 
         db.client.query(query ,  function(err,results){
@@ -442,6 +519,76 @@ exports.new_billaddress = function(req,res){
                 else{
                         console.log(results);
                 }
+=======
+	var query= 'select * from address where user_id='+ req.body.user_id + 'order by shippingflag desc';
+		
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log(results.rows);
+			var content = {'data':results.rows};
+			  res.json(content);
+		};
+	});
+};
+
+
+exports.checkout = function(req,res){
+	console.log(req.body);
+	
+    var query;
+    
+    for(var i=0;i<req.body.length;i++){
+    	
+   query=' insert into transaction(transaction_date, creditcard_id ,account_number,sell_id,user_id,quantity,price) values(CURRENT_TIMESTAMP, '+ req.body.creditcard_id+ ',(select account_number from account natural join (select user_id from product natural join sell where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true) ) as temp) ,(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true), '+req.body.length+', 1,(select price from sell where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true)));';
+   query=query+' update putincart set active = false where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true); update sell set stock=stock-1 where sell_id=(select max(sell_id) from putincart where cart_id=(select cart_id from cart where user_id='+req.body.length+') and active is true);';
+    	
+    	
+    }
+
+	
+	 query =query + ' update cart set price_total=0.0 where user_id='+req.body.length+';  update sell set available=false where stock<1;';
+	 db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log("Query executed!");
+		}
+	});
+	res.send(200);
+
+};
+
+
+exports.remove= function(req,res){
+	
+    var query;
+    console.log(req.body.product_id);
+   if(req.body.product_id!=null){
+    	
+   	query='update putincart set active=false where cart_id=(select cart_id from cart where user_id='+req.body.user_id+') and sell_id=(select sell_id from sell where product_id='+req.body.product_id+'); update cart set price_total=price_total-(select price from sell where product_id='+req.body.product_id+') where cart_id=(select cart_id from cart where user_id='+req.body.user_id+')';
+    	
+    }
+      
+      db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log("Query executed!");
+		}
+	});
+	res.send(200);
+
+};
+
+>>>>>>> 25b29fa35446a13a7bbbc7f4e6bf3d2ea56079d9
 
         });
         console.log(query);

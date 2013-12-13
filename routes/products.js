@@ -264,6 +264,76 @@ exports.productbyweek= function(req, res){
 		}
 	});
 };
+//new product
+
+//new product
+
+exports.new_product = function(req,res){
+	console.log(req.body);
+	var query;
+	//sell
+	if((req.body.sellprice!='$')&&(req.body.auctionprice=='$')){
+// 		
+		query='insert into product(product_name, description, model, image, brand, dimensions, category_id,user_id) values('+"'"+req.body.name+"'"+' , '+"'"+req.body.description+"'"+' , '+"'"+req.body.model+"'"+' ,  '+"'"+req.body.image +"'"+' , ' +"'"+ req.body.brand+"'"+','+"'"+req.body.dimensions+"'"+','+req.body.category+','+req.body.user_id+ '); insert into sell(price, sell_date, stock, product_id,available) values ('+ req.body.sellprice+', current_date ,'+req.body.stock+',(select max(product_id) from product),true)';
+	}
+	//auction	and sell
+	if((req.body.sellprice=='$')&& (req.body.auctionprice!='$')){
+		
+		query='insert into product(product_name, description, model, image, brand, dimensions, category_id,user_id) values('+"'"+req.body.name+"'"+' , '+"'"+req.body.description+"'"+' , '+"'"+req.body.model+"'"+' ,  '+"'"+req.body.image +"'"+' , ' +"'"+ req.body.brand+"'"+','+"'"+req.body.dimensions+"'"+','+req.body.category+','+req.body.user_id+ '); insert into auction(price, start_time, end_time, product_id,available) values ('+ req.body.auctionprice+', current_timestamp ,'+"'"+req.body.end_time+"'"+',(select max(product_id) from product),true)';
+	}
+	//auction
+	else{
+		
+		query='insert into product(product_name, description, model, image, brand, dimensions, category_id,user_id) values('+"'"+req.body.name+"'"+' , '+"'"+req.body.description+"'"+' , '+"'"+req.body.model+"'"+' ,  '+"'"+req.body.image +"'"+' , ' +"'"+ req.body.brand+"'"+','+"'"+req.body.dimensions+"'"+','+req.body.category+','+req.body.user_id+ '); insert into auction(price, start_time, end_time, product_id,available) values ('+ req.body.auctionprice+', current_timestamp ,'+"'"+req.body.end_time+"'"+',(select max(product_id) from product),true); insert into sell(price, sell_date, stock, product_id,available) values ('+ req.body.sellprice+', current_date ,'+req.body.stock+',(select max(product_id) from product),true)';
+	}
+	
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log("Query executed!");
+		}
+	});
+	res.send(200);
+};
+
+exports.categoriesfornewproduct= function(req, res){
+	var query="select temptable.parent_id, parent_name, temptable.category_id, category_name, child.category_id as child_id, child.name as child_name from category as child right outer join(select parent.name as parent_name, parent.category_id as parent_id, category.name as category_name , category.category_id as category_id from category inner join category as parent on category.parent_id=parent.category_id where parent.parent_id is null ) as temptable on temptable.category_id=child.parent_id ";
+	db.client.query(query, function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log(results.rows);
+			var content = {'data':results.rows};
+			res.json(content);
+		}
+	});
+};
+
+
+//add product to cart
+
+exports.add_product = function(req,res){
+	console.log(req.body);
+	var query;
+	query='insert into putincart(cart_id, sell_id, quantity, active) values((select cart_id from cart where user_id='+ req.body.user_id+'),(select sell_id from sell where  product_id='+ req.body.product_id +'),1,true ); update cart set price_total=((select price_total from cart where user_id='+ req.body.user_id+')+(select price from sell where  product_id='+ req.body.product_id+')) where user_id='+ req.body.user_id+';';
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log("Query executed!");
+		}
+	});
+	res.send(200);
+};
+
+
 
 
 
