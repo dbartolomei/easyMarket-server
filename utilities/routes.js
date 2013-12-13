@@ -59,7 +59,7 @@ module.exports = function(app,express){
 
 	app.get('/getaddress', users.getaddress);
 
-	app.get('/getaddress', users.getaddress);
+	//app.get('/getaddress', users.getaddress);
 
 
 	app.get('/reset', users.reset);

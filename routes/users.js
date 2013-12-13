@@ -302,45 +302,14 @@ exports.address= function(req,res){
         });
 };
 
-exports.new_address = function(req,res){
-	var shippingflag = req.body.shippingflag == 'true';
-	// console.log(req.body);
-	// var query ='update administrator set admin_id=7 where admin_id=2';
-	var query ='insert into address (address_line1, address_line2, zipcode, country, city, user_id, shippingflag) values (' + "'" + req.body.line1 + "','" + req.body.line2 + "','" + req.body.zipcode  + "','" + req.body.country + "','" +  req.body.city + "','" +  req.body.user_id + "','" +  shippingflag + "')";
-	// console.log(req.body);
-	db.client.query(query, function(err,results){
-		if(err){
-			console.log(err);
-			res.send(401);
-		}
-		else{
-			console.log(results);
-		}
-	});
-	res.send(200);
-}
-
-exports.new_cc = function(req,res){
-	var shippingflag = req.body.shippingflag == 'true';
-	// console.log(req.body);
-	// var query ='update administrator set admin_id=7 where admin_id=2';
-	var query ='insert into creditcard (creditcard_number, cardholder_first_name, cardholder_last_name, company, expiration_date, secret_code, user_id) values (' + "'" + req.body.ccnumber + "','" + req.body.ccownerfname + "','" + req.body.ccownerlname  + "','" + req.body.company + "','" +  req.body.expdate + "','" +  req.body.secretcode + "','" +  req.body.user_id + "')";
-	// console.log(req.body);
-	db.client.query(query, function(err,results){
-		if(err){
-			console.log(err);
-			res.send(401);
-		}
-		else{
-			console.log(results);
-		}
-	});
-	res.send(200);
-}
 
 exports.new_user = function(req,res){
     console.log(req.body);
-    var query ='insert into "user" (first_name, last_name, email, password, phone_number, gender, date_of_birth) values (' + "'" + req.body.fname + "','" + req.body.lname + "','" + req.body.email + "',md5('" + req.body.password + "'),'" + req.body.phone + "','" + req.body.gender + "','" + req.body.bday + "')";
+    var query ='insert into "user" (first_name, last_name, email, password, phone_number, gender, date_of_birth) values (' + "'" + req.body.fname + "','" + req.body.lname + "','" + req.body.email + "',md5('" + req.body.password + "'),'" + req.body.phone + "','" + req.body.gender + "','" + req.body.bday + "');";
+    query = query + 'insert into cart(price_total, user_id) values(0.00, (select max(user_id) from "user"));';
+  query= query+ 'insert into account(balance, user_id) values(0.00, (select max(user_id) from "user"));';   
+    
+    
     db.client.query(query,function(err,results){
             if(err){
                     console.log(err);
@@ -374,7 +343,8 @@ exports.address= function(req,res){
 
 exports.new_address = function(req,res){
         console.log(req.body);
-        var query ='insert into address (address_line1, address_line2, zipcode, country, city, user_id, shippingflag) values (' + "'" + req.body.line1 + "','" + req.body.line2 + "','" + req.body.zipcode + "','" + req.body.country + "','" + req.body.city + "','" + req.body.user_id + "','" + req.body.shipping_address + "')";
+        
+        var query ='insert into address (address_line1, address_line2, zipcode, country, city, user_id, shippingflag) values ('+ "'" + req.body.line1 + "','" + req.body.line2 + "','" + req.body.zipcode + "','" + req.body.country + "','" + req.body.city + "','" + req.body.userid + "','" + req.body.shipping_address + "');";
         db.client.query(query,function(err,results){
                 if(err){
                         console.log(err);
@@ -390,7 +360,8 @@ exports.new_address = function(req,res){
 
 exports.new_cc = function(req,res){
         console.log(req.body);
-        var query ='insert into creditcard (creditcard_number, cardholder_first_name, cardholder_last_name, company, expiration_date, secret_code, user_id) values (' + "'" + req.body.ccnumber + "','" + req.body.ccownerfname + "','" + req.body.ccownerlname + "','" + req.body.company + "','" + req.body.expdate + "','" + req.body.secretcode + "','" + req.body.user_id + "')";
+        var query ='insert into creditcard (creditcard_number, cardholder_first_name, cardholder_last_name, company, expiration_date, secret_code, user_id) values (' + "'" + req.body.ccnumber + "','" + req.body.ccownerfname + "','" + req.body.ccownerlname + "','" + req.body.company + "','" + req.body.expdate + "','" + req.body.secretcode + "','" + req.body.user_id + "');";
+        query = query + 'insert into billingaddress (address_id, creditcard_id) values (' + req.body.addressid + ', (select max(creditcard_id) from creditcard where user_id=' + req.body.user_id +'));';
         db.client.query(query,function(err,results){
                 if(err){
                         console.log(err);
