@@ -333,7 +333,48 @@ exports.add_product = function(req,res){
 	res.send(200);
 };
 
+exports.bid_product = function(req,res){
+	console.log(req.body);
+	var query;
+	query='insert into bid(price, bid_date, user_id, auction_id) values('+req.body.price+' , CURRENT_TIMESTAMP,'+req.body.user_id +',(select auction_id from auction where product_id='+req.body.product_id+'));';
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log("Query executed!");
+		}
+	});
+	res.send(200);
+};
 
 
+exports.accept_bid = function(req,res){
+	console.log(req.body);
+	var query;
+	
+    var query;
+    
+   
+  
+  query= ' insert into transaction(transaction_date, creditcard_id ,account_number,bid_id,user_id,quantity,price) values(CURRENT_TIMESTAMP,'+req.body.user_id+',(select account_number from account where user_id='+req.body.user_id+'), (select bid_id from bid where bid_id=(select max(bid_id) from bid where auction_id=(select auction_id from auction where product_id='+req.body.product_id+')  ) ), (select user_id from bid where bid_id=(select max(bid_id) from bid where auction_id=(select auction_id from auction where product_id='+req.body.product_id+')  ) ), 1,(select price from bid where bid_id=(select max(bid_id) from bid where auction_id=(select auction_id from auction where '+req.body.product_id+')  )) );'
+  + 'update auction set available=false where product_id='+req.body.product_id;
+    
 
+    
+	console.log(query);
+	
+	
+	db.client.query(query ,  function(err,results){
+		if(err){
+			console.log(err);
+			res.send(401);
+		}
+		else{
+			console.log("Query executed!");
+		}
+	});
+	res.send(200);
+};
 
