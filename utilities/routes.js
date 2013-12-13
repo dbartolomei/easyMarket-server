@@ -47,6 +47,7 @@ module.exports = function(app,express){
 
 	app.get('/userlist', users.allusers);
 	app.get('/user', users.getuser);
+	app.get('/getaddress', users.getaddress);
 	
 	app.get('/salesbyday', products.salesbyday);
 	app.get('/salesbyweek', products.salesbyweek);
@@ -59,6 +60,8 @@ module.exports = function(app,express){
 	app.post('/new_address', users.new_address);
 	
 	app.post('/new_user', users.new_user);
+	app.post('/new_creditcard', users.new_cc);
+	app.post('/new_billaddress', users.new_billaddress);
 	
 }
 
